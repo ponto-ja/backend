@@ -1,6 +1,10 @@
 import { FastifyInstance } from 'fastify';
+
 import { registerBusinewsOwner } from './controllers/register-business-owner';
+import { authenticateBusinessOwner } from './controllers/authenticate-business-owner';
+
 import { registerBusinessOwnerBodySchema } from './schemas/register-business-owner-schema';
+import { authenticateBusinessOwnerParamsSchema } from './schemas/authenticate-business-owner-schema';
 
 export const businessOwnerRoutes = async (app: FastifyInstance) => {
   app.post('/register', async (request, reply) => {
@@ -17,6 +21,26 @@ export const businessOwnerRoutes = async (app: FastifyInstance) => {
 
       case 'EMAIL_ALREADY_EXISTS': {
         return reply.status(409).send({ code });
+      }
+
+      case 'UNEXPECTED_ERROR': {
+        return reply.status(500).send({ error });
+      }
+    }
+  });
+
+  app.get('/auth/:email', async (request, reply) => {
+    const { email } = authenticateBusinessOwnerParamsSchema.parse(request.params);
+
+    const { code, error } = await authenticateBusinessOwner({ email });
+
+    switch (code) {
+      case 'AUTHENTICATED': {
+        return reply.status(200).send({ code });
+      }
+
+      case 'INVALID_CREDENTIAL': {
+        return reply.status(400).send({ code });
       }
 
       case 'UNEXPECTED_ERROR': {
