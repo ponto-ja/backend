@@ -6,3 +6,146 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum ScoreOperation {
+  EARNING
+  SPEDING
+}
+
+model BusinessOwner {
+  id String @id @unique @default(cuid()) @db.VarChar(30)
+
+  firstName String @map("first_name")
+  lastName  String @map("last_name")
+  email     String @unique
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt() @map("updated_at")
+
+  fidelityProgram FidelityProgram?
+
+  @@map("business_owners")
+}
+
+model FidelityProgram {
+  id String @id @unique @default(cuid()) @db.VarChar(30)
+
+  name      String
+  scoreRate Float  @map("score_rate")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt() @map("updated_at")
+
+  businessOwner   BusinessOwner @relation(fields: [businessOwnerId], references: [id])
+  businessOwnerId String        @unique @map("business_owner_id") @db.VarChar(30)
+
+  rewards                          Reward[]
+  pivotFidelityProgramParticipants PivotFidelityProgramParticipant[]
+  scores                           Score[]
+  scoreHistory                     ScoreHistory[]
+  rewardHistory                    RewardHistory[]
+
+  @@map("fidelity_programs")
+}
+
+model Reward {
+  id String @id @unique @default(cuid()) @db.VarChar(30)
+
+  name        String
+  scoreNeeded BigInt  @map("score_needed")
+  description String?
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt() @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  fidelityProgram   FidelityProgram @relation(fields: [fidelityProgramId], references: [id])
+  fidelityProgramId String          @unique @map("fidelity_program_id") @db.VarChar(30)
+
+  @@map("rewards")
+}
+
+model Participant {
+  id String @id @unique @default(cuid()) @db.VarChar(30)
+
+  firstName   String @map("first_name")
+  lastName    String @map("last_name")
+  phoneNumber String @map("phone_number") @db.VarChar(11)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt() @map("updated_at")
+
+  pivotFidelityProgramParticipants PivotFidelityProgramParticipant[]
+  scores                           Score[]
+  scoreHistory                     ScoreHistory[]
+  rewardHistory                    RewardHistory[]
+
+  @@map("participants")
+}
+
+model PivotFidelityProgramParticipant {
+  id String @id @unique @default(cuid()) @db.VarChar(30)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  fidelityProgram   FidelityProgram @relation(fields: [fidelityProgramId], references: [id])
+  fidelityProgramId String          @unique @map("fidelity_program_id") @db.VarChar(30)
+
+  participant   Participant @relation(fields: [participantId], references: [id])
+  participantId String      @unique @map("participant_id") @db.VarChar(30)
+
+  @@map("pivot_fidelity_programs_participants")
+}
+
+model Score {
+  id String @id @unique @default(cuid()) @db.VarChar(30)
+
+  score BigInt
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt() @map("updated_at")
+
+  fidelityProgram   FidelityProgram @relation(fields: [fidelityProgramId], references: [id])
+  fidelityProgramId String          @unique @map("fidelity_program_id") @db.VarChar(30)
+
+  participant   Participant @relation(fields: [participantId], references: [id])
+  participantId String      @unique @map("participant_id") @db.VarChar(30)
+
+  @@map("scores")
+}
+
+model ScoreHistory {
+  id String @id @unique @default(cuid()) @db.VarChar(30)
+
+  score     BigInt
+  operation ScoreOperation
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  fidelityProgram   FidelityProgram @relation(fields: [fidelityProgramId], references: [id])
+  fidelityProgramId String          @unique @map("fidelity_program_id") @db.VarChar(30)
+
+  participant   Participant @relation(fields: [participantId], references: [id])
+  participantId String      @unique @map("participant_id") @db.VarChar(30)
+
+  @@map("score_history")
+}
+
+model RewardHistory {
+  id String @id @unique @default(cuid()) @db.VarChar(30)
+
+  name        String
+  scoreNeeded BigInt  @map("score_needed")
+  description String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  fidelityProgram   FidelityProgram @relation(fields: [fidelityProgramId], references: [id])
+  fidelityProgramId String          @unique @map("fidelity_program_id") @db.VarChar(30)
+
+  participant   Participant @relation(fields: [participantId], references: [id])
+  participantId String      @unique @map("participant_id") @db.VarChar(30)
+
+  @@map("reward_history")
+}
