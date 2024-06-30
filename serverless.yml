@@ -1,0 +1,44 @@
+service: pontoja-api
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  architecture: x86_64
+  region: us-east-1
+  timeout: 30
+  memorySize: 1024
+  stage: ${opt:stage, 'dev'}    
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-webpack 
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+    reloadHandler: true
+  webpack:
+    webpackConfig: ./webpack.config.js
+    excludeFiles: ./src/**/*.(spec|test).ts
+    packager: npm
+    includeModules: true
+    keepOutputDirectory: true
+    packagerOptions: 
+      scripts: 
+      - prisma generate
+  dotenv:
+    logging: false
+  settings:
+    http:
+      allowMethods: any
+      path: /{proxy+}
+
+functions:
+  api:
+    name: ${self:service}-${self:provider.stage}
+    handler: src/server.handler
+    events:
+      - http:
+          method: ${self:custom.settings.http.allowMethods}
+          path: ${self:custom.settings.http.path}
