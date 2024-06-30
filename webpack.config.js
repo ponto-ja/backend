@@ -44,8 +44,8 @@ module.exports = {
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
-    /* new CopyWebpackPlugin({
+    new CopyWebpackPlugin({
       patterns: ['./prisma/schema.prisma'],
-    }), */
+    }),
   ],
 };
