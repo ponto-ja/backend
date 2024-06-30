@@ -15,9 +15,10 @@ enum ScoreOperation {
 model BusinessOwner {
   id String @id @unique @default(cuid()) @db.VarChar(30)
 
-  firstName String @map("first_name")
-  lastName  String @map("last_name")
-  email     String @unique
+  firstName             String  @map("first_name")
+  lastName              String  @map("last_name")
+  email                 String  @unique
+  hasActiveSubscription Boolean @map("has_active_subscription")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt() @map("updated_at")
