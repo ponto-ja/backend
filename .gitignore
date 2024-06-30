@@ -1,0 +1,14 @@
+# Dependencies
+node_modules
+
+# Application
+.webpack
+.serverless
+
+# Environment Variables
+.env.local
+.env.development
+.env.production
+
+# Testing
+coverage
