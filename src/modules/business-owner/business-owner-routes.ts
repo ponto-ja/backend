@@ -5,12 +5,15 @@ import { authenticateBusinessOwner } from './controllers/authenticate-business-o
 import { getBusinessOwnerById } from './controllers/get-business-owner-by-id';
 import { generateAPIKey } from './controllers/generate-api-key';
 import { deleteAPIKey } from './controllers/delete-api-key';
+import { getAPIKey } from './controllers/get-api-key';
 
 import { registerBusinessOwnerBodySchema } from './schemas/register-business-owner-schema';
 import { authenticateBusinessOwnerParamsSchema } from './schemas/authenticate-business-owner-schema';
 import { getBusinessOwnerByIdParamsSchema } from './schemas/get-business-owner-by-id-schema';
 import { generateAPIKeyBodySchema } from './schemas/generate-api-key-schema';
 import { deleteAPIKeyHeadersSchema } from './schemas/delete-api-key-schema';
+import { getAPIKeyParamsSchema } from './schemas/get-api-key-schema';
+
 import { checkAPIKey } from '@/common/middlewares/check-api-key';
 
 export const businessOwnerRoutes = async (app: FastifyInstance) => {
@@ -112,6 +115,28 @@ export const businessOwnerRoutes = async (app: FastifyInstance) => {
 
       case 'INVALID_API_KEY': {
         return reply.status(400).send({ code });
+      }
+
+      case 'UNEXPECTED_ERROR': {
+        return reply.status(500).send({ error });
+      }
+    }
+  });
+
+  app.get('/:businessOwnerId/api_key', async (request, reply) => {
+    const { businessOwnerId } = getAPIKeyParamsSchema.parse(request.params);
+
+    const { code, error, data } = await getAPIKey({
+      businessOwnerId,
+    });
+
+    switch (code) {
+      case 'API_KEY_FOUND': {
+        return reply.status(200).send({ apiKey: data });
+      }
+
+      case 'API_KEY_NOT_FOUND': {
+        return reply.status(404).send({ code });
       }
 
       case 'UNEXPECTED_ERROR': {
