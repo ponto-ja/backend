@@ -71,7 +71,7 @@ export const generateAPIKey = async ({
         api_key: {
           S: apiKey,
         },
-        payload: {
+        token: {
           S: token,
         },
         created_at: {

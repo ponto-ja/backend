@@ -4,11 +4,13 @@ import { registerBusinewsOwner } from './controllers/register-business-owner';
 import { authenticateBusinessOwner } from './controllers/authenticate-business-owner';
 import { getBusinessOwnerById } from './controllers/get-business-owner-by-id';
 import { generateAPIKey } from './controllers/generate-api-key';
+import { deleteAPIKey } from './controllers/delete-api-key';
 
 import { registerBusinessOwnerBodySchema } from './schemas/register-business-owner-schema';
 import { authenticateBusinessOwnerParamsSchema } from './schemas/authenticate-business-owner-schema';
 import { getBusinessOwnerByIdParamsSchema } from './schemas/get-business-owner-by-id-schema';
 import { generateAPIKeyBodySchema } from './schemas/generate-api-key-schema';
+import { deleteAPIKeyHeadersSchema } from './schemas/delete-api-key-schema';
 
 export const businessOwnerRoutes = async (app: FastifyInstance) => {
   app.post('/register', async (request, reply) => {
@@ -88,6 +90,26 @@ export const businessOwnerRoutes = async (app: FastifyInstance) => {
       }
 
       case 'INVALID_CREDENTIAL': {
+        return reply.status(400).send({ code });
+      }
+
+      case 'UNEXPECTED_ERROR': {
+        return reply.status(500).send({ error });
+      }
+    }
+  });
+
+  app.delete('/api_key', async (request, reply) => {
+    const { 'api-key': apiKey } = deleteAPIKeyHeadersSchema.parse(request.headers);
+
+    const { code, error } = await deleteAPIKey({ apiKey });
+
+    switch (code) {
+      case 'DELETED': {
+        return reply.status(200).send({ code });
+      }
+
+      case 'INVALID_API_KEY': {
         return reply.status(400).send({ code });
       }
 
