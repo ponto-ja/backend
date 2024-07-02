@@ -47,4 +47,8 @@ export const checkAPIKey = async (request: FastifyRequest, reply: FastifyReply) 
   if (payload?.id !== businessOwnerId) {
     return reply.status(400).send({ code: 'INVALID_API_KEY' });
   }
+
+  request.businessOwner = {
+    id: businessOwnerId,
+  };
 };

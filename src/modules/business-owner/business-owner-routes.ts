@@ -11,7 +11,6 @@ import { registerBusinessOwnerBodySchema } from './schemas/register-business-own
 import { authenticateBusinessOwnerParamsSchema } from './schemas/authenticate-business-owner-schema';
 import { getBusinessOwnerByIdParamsSchema } from './schemas/get-business-owner-by-id-schema';
 import { generateAPIKeyBodySchema } from './schemas/generate-api-key-schema';
-import { deleteAPIKeyHeadersSchema } from './schemas/delete-api-key-schema';
 import { getAPIKeyParamsSchema } from './schemas/get-api-key-schema';
 
 import { checkAPIKey } from '@/common/middlewares/check-api-key';
@@ -103,10 +102,10 @@ export const businessOwnerRoutes = async (app: FastifyInstance) => {
     }
   });
 
-  app.delete('/api_key', async (request, reply) => {
-    const { 'api-key': apiKey } = deleteAPIKeyHeadersSchema.parse(request.headers);
-
-    const { code, error } = await deleteAPIKey({ apiKey });
+  app.delete('/api_key', { onRequest: [checkAPIKey] }, async (request, reply) => {
+    const { code, error } = await deleteAPIKey({
+      businessOwnerId: request.businessOwner.id,
+    });
 
     switch (code) {
       case 'DELETED': {
