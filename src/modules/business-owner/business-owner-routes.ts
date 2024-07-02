@@ -11,6 +11,7 @@ import { authenticateBusinessOwnerParamsSchema } from './schemas/authenticate-bu
 import { getBusinessOwnerByIdParamsSchema } from './schemas/get-business-owner-by-id-schema';
 import { generateAPIKeyBodySchema } from './schemas/generate-api-key-schema';
 import { deleteAPIKeyHeadersSchema } from './schemas/delete-api-key-schema';
+import { checkAPIKey } from '@/common/middlewares/check-api-key';
 
 export const businessOwnerRoutes = async (app: FastifyInstance) => {
   app.post('/register', async (request, reply) => {
@@ -35,7 +36,7 @@ export const businessOwnerRoutes = async (app: FastifyInstance) => {
     }
   });
 
-  app.get('/auth/:email', async (request, reply) => {
+  app.get('/auth/:email', { onRequest: [checkAPIKey] }, async (request, reply) => {
     const { email } = authenticateBusinessOwnerParamsSchema.parse(request.params);
 
     const { code, error } = await authenticateBusinessOwner({ email });
@@ -55,7 +56,7 @@ export const businessOwnerRoutes = async (app: FastifyInstance) => {
     }
   });
 
-  app.get('/:id', async (request, reply) => {
+  app.get('/:id', { onRequest: [checkAPIKey] }, async (request, reply) => {
     const { id } = getBusinessOwnerByIdParamsSchema.parse(request.params);
 
     const { code, error, data } = await getBusinessOwnerById({ id });
