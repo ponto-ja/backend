@@ -5,6 +5,7 @@ import { getFidelityProgramSummary } from './controllers/get-fidelity-program-su
 import { getFidelityProgram } from './controllers/get-fidelity-program';
 import { updateFidelityProgram } from './controllers/update-fidelity-program';
 import { findFidelityProgramsByParticipantId } from './controllers/find-fidelity-programs-by-participant-id';
+import { getFidelityProgramByIdAndParticipantId } from './controllers/get-fidelity-program-by-id-and-participant-id';
 
 import { registerFidelityProgramBodySchema } from './schemas/register-fidelity-program-schema';
 import {
@@ -12,6 +13,7 @@ import {
   updateFidelityProgramBodySchema,
 } from './schemas/update-fidelity-program-schema';
 import { findFidelityProgramsByParticipantIdParamsSchema } from './schemas/find-fidelity-programs-by-participant-id-schema';
+import { getFidelityProgramByIdAndParticipantIdParamsSchema } from './schemas/get-fidelity-program-by-id-and-participant-id-schema';
 
 import { checkAPIKey } from '@/common/middlewares/check-api-key';
 import { checkSubscription } from '@/common/middlewares/check-subscription';
@@ -134,4 +136,35 @@ export const fidelityProgramRoutes = async (app: FastifyInstance) => {
       }
     }
   });
+
+  app.get(
+    '/:fidelityProgramId/information_by_participant/:participantId',
+    async (request, reply) => {
+      const { fidelityProgramId, participantId } =
+        getFidelityProgramByIdAndParticipantIdParamsSchema.parse(request.params);
+
+      const { code, data, error } = await getFidelityProgramByIdAndParticipantId({
+        fidelityProgramId,
+        participantId,
+      });
+
+      switch (code) {
+        case 'FIDELITY_PROGRAM_FOUND': {
+          return reply.status(200).send(data);
+        }
+
+        case 'PARTICIPANT_NOT_FOUND': {
+          return reply.status(404).send({ code });
+        }
+
+        case 'FIDELITY_PROGRAM_NOT_FOUND': {
+          return reply.status(404).send({ code });
+        }
+
+        case 'UNEXPECTED_ERROR': {
+          return reply.status(500).send({ error });
+        }
+      }
+    },
+  );
 };
