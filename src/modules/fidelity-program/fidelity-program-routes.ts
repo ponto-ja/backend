@@ -5,11 +5,12 @@ import { registerFidelityProgram } from './controllers/register-fidelity-program
 import { registerFidelityProgramBodySchema } from './schemas/register-fidelity-programa-schema';
 
 import { checkAPIKey } from '@/common/middlewares/check-api-key';
+import { checkSubscription } from '@/common/middlewares/check-subscription';
 
 export const fidelityProgramRoutes = async (app: FastifyInstance) => {
   app.addHook('onRequest', checkAPIKey);
 
-  app.post('/register', async (request, reply) => {
+  app.post('/register', { onRequest: [checkSubscription] }, async (request, reply) => {
     const { name, scoreRate, rewards } = registerFidelityProgramBodySchema.parse(
       request.body,
     );
