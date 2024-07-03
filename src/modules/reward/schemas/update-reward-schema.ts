@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const updateFidelityProgramParamsSchema = z.object({
+export const updateRewardParamsSchema = z.object({
   id: z
     .string({
       required_error: 'id is a required param',
@@ -10,16 +10,23 @@ export const updateFidelityProgramParamsSchema = z.object({
     .cuid({ message: 'id must be a cuid' }),
 });
 
-export const updateFidelityProgramBodySchema = z.object({
+export const updateRewardBodySchema = z.object({
   name: z
     .string({
       invalid_type_error: 'name must be a string',
     })
     .min(1, { message: 'name cannot be an empty string' })
     .optional(),
-  scoreRate: z
+  scoreNeeded: z
     .number({
       invalid_type_error: 'scoreRate must be a number',
     })
     .optional(),
+  description: z
+    .string({
+      invalid_type_error: 'description must be a string',
+    })
+    .min(1, { message: 'description cannot be an empty string' })
+    .optional()
+    .nullable(),
 });
