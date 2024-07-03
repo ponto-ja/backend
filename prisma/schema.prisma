@@ -61,7 +61,7 @@ model Reward {
   deletedAt DateTime? @map("deleted_at")
 
   fidelityProgram   FidelityProgram @relation(fields: [fidelityProgramId], references: [id])
-  fidelityProgramId String          @unique @map("fidelity_program_id") @db.VarChar(30)
+  fidelityProgramId String          @map("fidelity_program_id") @db.VarChar(30)
 
   @@map("rewards")
 }
@@ -91,10 +91,10 @@ model PivotFidelityProgramParticipant {
   deletedAt DateTime? @map("deleted_at")
 
   fidelityProgram   FidelityProgram @relation(fields: [fidelityProgramId], references: [id])
-  fidelityProgramId String          @unique @map("fidelity_program_id") @db.VarChar(30)
+  fidelityProgramId String          @map("fidelity_program_id") @db.VarChar(30)
 
   participant   Participant @relation(fields: [participantId], references: [id])
-  participantId String      @unique @map("participant_id") @db.VarChar(30)
+  participantId String      @map("participant_id") @db.VarChar(30)
 
   @@map("pivot_fidelity_programs_participants")
 }
@@ -108,10 +108,10 @@ model Score {
   updatedAt DateTime @updatedAt() @map("updated_at")
 
   fidelityProgram   FidelityProgram @relation(fields: [fidelityProgramId], references: [id])
-  fidelityProgramId String          @unique @map("fidelity_program_id") @db.VarChar(30)
+  fidelityProgramId String          @map("fidelity_program_id") @db.VarChar(30)
 
   participant   Participant @relation(fields: [participantId], references: [id])
-  participantId String      @unique @map("participant_id") @db.VarChar(30)
+  participantId String      @map("participant_id") @db.VarChar(30)
 
   @@map("scores")
 }
@@ -125,10 +125,10 @@ model ScoreHistory {
   createdAt DateTime @default(now()) @map("created_at")
 
   fidelityProgram   FidelityProgram @relation(fields: [fidelityProgramId], references: [id])
-  fidelityProgramId String          @unique @map("fidelity_program_id") @db.VarChar(30)
+  fidelityProgramId String          @map("fidelity_program_id") @db.VarChar(30)
 
   participant   Participant @relation(fields: [participantId], references: [id])
-  participantId String      @unique @map("participant_id") @db.VarChar(30)
+  participantId String      @map("participant_id") @db.VarChar(30)
 
   @@map("score_history")
 }
@@ -143,10 +143,10 @@ model RewardHistory {
   createdAt DateTime @default(now()) @map("created_at")
 
   fidelityProgram   FidelityProgram @relation(fields: [fidelityProgramId], references: [id])
-  fidelityProgramId String          @unique @map("fidelity_program_id") @db.VarChar(30)
+  fidelityProgramId String          @map("fidelity_program_id") @db.VarChar(30)
 
   participant   Participant @relation(fields: [participantId], references: [id])
-  participantId String      @unique @map("participant_id") @db.VarChar(30)
+  participantId String      @map("participant_id") @db.VarChar(30)
 
   @@map("reward_history")
 }

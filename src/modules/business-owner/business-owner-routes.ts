@@ -24,7 +24,7 @@ export const businessOwnerRoutes = async (app: FastifyInstance) => {
     const { code, error } = await registerBusinewsOwner({ firstName, lastName, email });
 
     switch (code) {
-      case 'CREATED': {
+      case 'REGISTERED': {
         return reply.status(201).send({ code });
       }
 

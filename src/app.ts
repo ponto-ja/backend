@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import fastifyJWT from '@fastify/jwt';
 import { errorHandler } from './helpers/error-handler';
 import { businessOwnerRoutes } from './modules/business-owner/business-owner-routes';
+import { fidelityProgramRoutes } from './modules/fidelity-program/fidelity-program-routes';
 
 export const app = fastify();
 
@@ -12,3 +13,4 @@ app.register(fastifyJWT, {
 app.setErrorHandler(errorHandler);
 
 app.register(businessOwnerRoutes, { prefix: 'business_owner' });
+app.register(fidelityProgramRoutes, { prefix: 'fidelity_program' });

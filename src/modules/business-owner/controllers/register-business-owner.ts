@@ -8,7 +8,7 @@ type RegisterBusinessOwnerInput = {
 
 type RegisterBusinessOwnerOutput = {
   error: unknown | null;
-  code: 'CREATED' | 'EMAIL_ALREADY_EXISTS' | 'UNEXPECTED_ERROR';
+  code: 'REGISTERED' | 'EMAIL_ALREADY_EXISTS' | 'UNEXPECTED_ERROR';
 };
 
 export const registerBusinewsOwner = async ({
@@ -44,7 +44,7 @@ export const registerBusinewsOwner = async ({
 
     return {
       error: null,
-      code: 'CREATED',
+      code: 'REGISTERED',
     };
   } catch (error) {
     return {
