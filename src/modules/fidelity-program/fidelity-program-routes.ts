@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 
 import { registerFidelityProgram } from './controllers/register-fidelity-program';
+import { getFidelityProgramSummary } from './controllers/get-fidelity-program-summary';
 
 import { registerFidelityProgramBodySchema } from './schemas/register-fidelity-programa-schema';
 
@@ -33,6 +34,26 @@ export const fidelityProgramRoutes = async (app: FastifyInstance) => {
 
       case 'FIDELITY_PROGRAM_ALREADY_EXISTS': {
         return reply.status(409).send({ code });
+      }
+
+      case 'UNEXPECTED_ERROR': {
+        return reply.status(500).send({ error });
+      }
+    }
+  });
+
+  app.get('/summary', async (request, reply) => {
+    const { code, data, error } = await getFidelityProgramSummary({
+      businessOwnerId: request.businessOwner.id,
+    });
+
+    switch (code) {
+      case 'FIDELITY_PROGRAM_FOUND': {
+        return reply.status(200).send(data);
+      }
+
+      case 'FIDELITY_PROGRAM_NOT_FOUND': {
+        return reply.status(404).send({ code });
       }
 
       case 'UNEXPECTED_ERROR': {
