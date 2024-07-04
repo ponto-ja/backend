@@ -42,6 +42,7 @@ export const getFidelityProgram = async ({
     const rewards = await prisma.reward.findMany({
       where: {
         fidelityProgramId: fidelityProgram.id,
+        deletedAt: null,
       },
       select: {
         id: true,

@@ -46,6 +46,7 @@ export const getFidelityProgramSummary = async ({
     const numberOfRewards = await prisma.reward.count({
       where: {
         fidelityProgramId: fidelityProgram.id,
+        deletedAt: null,
       },
     });
 
