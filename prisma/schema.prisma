@@ -71,7 +71,7 @@ model Participant {
 
   firstName   String @map("first_name")
   lastName    String @map("last_name")
-  phoneNumber String @map("phone_number") @db.VarChar(11)
+  phoneNumber String @unique @map("phone_number") @db.VarChar(11)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt() @map("updated_at")
