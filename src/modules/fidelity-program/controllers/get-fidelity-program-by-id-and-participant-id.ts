@@ -39,7 +39,7 @@ export const getFidelityProgramByIdAndParticipantId = async ({
       return {
         data: null,
         error: null,
-        code: 'FIDELITY_PROGRAM_FOUND',
+        code: 'FIDELITY_PROGRAM_NOT_FOUND',
       };
     }
 
@@ -60,14 +60,17 @@ export const getFidelityProgramByIdAndParticipantId = async ({
     const numberOfRewards = await prisma.reward.count({
       where: {
         fidelityProgramId,
+        deletedAt: null,
       },
     });
 
-    const totalScore = await prisma.score.count({
-      where: {
-        fidelityProgramId,
-      },
-    });
+    const score = await prisma.$queryRaw<{ score: number }[]>`
+      SELECT SUM(S.score)::integer AS score
+      FROM scores AS S
+      WHERE
+        fidelity_program_id = ${fidelityProgramId} AND
+        participant_id = ${participantId}
+    `;
 
     const differenceBetweenDatesInDays = dayjs()
       .startOf('date')
@@ -80,7 +83,7 @@ export const getFidelityProgramByIdAndParticipantId = async ({
         scoreRate: fidelityProgram.scoreRate,
         numberOfActiveDays: differenceBetweenDatesInDays,
         numberOfRewards,
-        totalScore,
+        totalScore: score[0].score,
         createdAt: fidelityProgram.createdAt.toISOString(),
       },
       error: null,
