@@ -17,7 +17,7 @@ type GenerateAPIKeyOutput = {
   code:
     | 'GENERATED_API_KEY'
     | 'INVALID_CREDENTIAL'
-    | 'API_KEY_ALREADY_EXISTS'
+    | 'ALREADY_GENERATED_API_KEY'
     | 'UNEXPECTED_ERROR';
 };
 
@@ -54,7 +54,7 @@ export const generateAPIKey = async ({
       return {
         data: null,
         error: null,
-        code: 'API_KEY_ALREADY_EXISTS',
+        code: 'ALREADY_GENERATED_API_KEY',
       };
     }
 

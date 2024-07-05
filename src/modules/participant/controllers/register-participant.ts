@@ -8,7 +8,7 @@ type RegisterParticipantInput = {
 
 type RegisterParticipantOutput = {
   error: unknown | null;
-  code: 'PARTICIPANT_ALREADY_EXISTS' | 'REGISTERED' | 'UNEXPECTED_ERROR';
+  code: 'ALREADY_REGISTERED_PARTICIPANT' | 'REGISTERED' | 'UNEXPECTED_ERROR';
 };
 
 export const registerParticipant = async ({
@@ -26,7 +26,7 @@ export const registerParticipant = async ({
     if (participantExists) {
       return {
         error: null,
-        code: 'PARTICIPANT_ALREADY_EXISTS',
+        code: 'ALREADY_REGISTERED_PARTICIPANT',
       };
     }
 

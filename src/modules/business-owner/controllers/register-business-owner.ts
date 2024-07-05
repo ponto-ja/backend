@@ -8,7 +8,7 @@ type RegisterBusinessOwnerInput = {
 
 type RegisterBusinessOwnerOutput = {
   error: unknown | null;
-  code: 'REGISTERED' | 'EMAIL_ALREADY_EXISTS' | 'UNEXPECTED_ERROR';
+  code: 'REGISTERED' | 'ALREADY_REGISTERED_EMAIL' | 'UNEXPECTED_ERROR';
 };
 
 export const registerBusinewsOwner = async ({
@@ -28,7 +28,7 @@ export const registerBusinewsOwner = async ({
   if (businessOwnerExists) {
     return {
       error: null,
-      code: 'EMAIL_ALREADY_EXISTS',
+      code: 'ALREADY_REGISTERED_EMAIL',
     };
   }
 

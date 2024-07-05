@@ -30,7 +30,7 @@ export const participantRoutes = async (app: FastifyInstance) => {
         return reply.status(200).send({ code });
       }
 
-      case 'PARTICIPANT_ALREADY_EXISTS': {
+      case 'ALREADY_REGISTERED_PARTICIPANT': {
         return reply.status(409).send({ code });
       }
 

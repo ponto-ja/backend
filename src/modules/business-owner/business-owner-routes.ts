@@ -28,7 +28,7 @@ export const businessOwnerRoutes = async (app: FastifyInstance) => {
         return reply.status(201).send({ code });
       }
 
-      case 'EMAIL_ALREADY_EXISTS': {
+      case 'ALREADY_REGISTERED_EMAIL': {
         return reply.status(409).send({ code });
       }
 
@@ -88,7 +88,7 @@ export const businessOwnerRoutes = async (app: FastifyInstance) => {
         return reply.status(201).send({ apiKey: data!.apiKey });
       }
 
-      case 'API_KEY_ALREADY_EXISTS': {
+      case 'ALREADY_GENERATED_API_KEY': {
         return reply.status(409).send({ code });
       }
 

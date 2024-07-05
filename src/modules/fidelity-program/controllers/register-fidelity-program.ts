@@ -18,7 +18,7 @@ type RegisterFidelityProgramOutput = {
   error: unknown | null;
   code:
     | 'REWARDS_CANNOT_BE_EMPTY_LIST'
-    | 'FIDELITY_PROGRAM_ALREADY_EXISTS'
+    | 'ALREADY_REGISTERED_FIDELITY_PROGRAM'
     | 'REGISTERED'
     | 'UNEXPECTED_ERROR';
 };
@@ -40,7 +40,7 @@ export const registerFidelityProgram = async ({
       return {
         data: null,
         error: null,
-        code: 'FIDELITY_PROGRAM_ALREADY_EXISTS',
+        code: 'ALREADY_REGISTERED_FIDELITY_PROGRAM',
       };
     }
 

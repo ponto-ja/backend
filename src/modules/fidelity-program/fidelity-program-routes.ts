@@ -42,7 +42,7 @@ export const fidelityProgramRoutes = async (app: FastifyInstance) => {
         return reply.status(400).send({ code });
       }
 
-      case 'FIDELITY_PROGRAM_ALREADY_EXISTS': {
+      case 'ALREADY_REGISTERED_FIDELITY_PROGRAM': {
         return reply.status(409).send({ code });
       }
 
