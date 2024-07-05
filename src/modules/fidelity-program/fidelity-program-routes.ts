@@ -115,7 +115,7 @@ export const fidelityProgramRoutes = async (app: FastifyInstance) => {
 
   app.get('/list_by_participant/:participantId', async (request, reply) => {
     const { participantId } = findFidelityProgramsByParticipantIdParamsSchema.parse(
-      request.query,
+      request.params,
     );
 
     const { code, data, error } = await findFidelityProgramsByParticipantId({
