@@ -3,10 +3,12 @@ import { FastifyInstance } from 'fastify';
 import { registerParticipant } from './controllers/register-participant';
 import { getParticipantByPhoneNumber } from './controllers/get-participant-by-phone-number';
 import { findParticipantsByFidelityProgramId } from './controllers/find-participants-by-fidelity-program-id';
+import { registerParticipantInFidelityProgram } from './controllers/register-participant-in-fidelity-program';
 
 import { registerParticipantBodySchema } from './schemas/register-participant-schema';
 import { getParticipantByPhoneNumberParamsSchema } from './schemas/get-participant-by-phone-number-schema';
 import { findParticipantsByFidelityProgramIdParamsSchema } from './schemas/find-participants-by-fidelity-program-id-schema';
+import { registerParticipantInFidelityProgramBodySchema } from './schemas/register-participant-in-fidelity-program-schema';
 
 import { checkAPIKey } from '@/common/middlewares/check-api-key';
 import { checkSubscription } from '@/common/middlewares/check-subscription';
@@ -83,4 +85,36 @@ export const participantRoutes = async (app: FastifyInstance) => {
       }
     }
   });
+
+  app.post(
+    '/register_in_fidelity_program',
+    { onRequest: [checkSubscription] },
+    async (request, reply) => {
+      const { participant, fidelityProgramId } =
+        registerParticipantInFidelityProgramBodySchema.parse(request.body);
+
+      const { code, error } = await registerParticipantInFidelityProgram({
+        participant,
+        fidelityProgramId,
+      });
+
+      switch (code) {
+        case 'PARTICIPANT_REGISTERED_IN_PROGRAM': {
+          return reply.status(201).send({ code });
+        }
+
+        case 'FIDELITY_PROGRAM_NOT_FOUND': {
+          return reply.status(404).send({ code });
+        }
+
+        case 'PARTICIPANT_IS_ALREADY_IN_PROGRAM': {
+          return reply.status(409).send({ code });
+        }
+
+        case 'UNEXPECTED_ERROR': {
+          return reply.status(500).send({ error });
+        }
+      }
+    },
+  );
 };
