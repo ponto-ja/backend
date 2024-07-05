@@ -49,6 +49,9 @@ export const findFidelityProgramsByParticipantId = async ({
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     const fidelityPrograms = data.map((item) => ({
