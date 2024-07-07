@@ -6,6 +6,7 @@ import { fidelityProgramRoutes } from './modules/fidelity-program/fidelity-progr
 import { rewardRoutes } from './modules/reward/reward-routes';
 import { participantRoutes } from './modules/participant/participant-routes';
 import { scoreRoutes } from './modules/score/score-routes';
+import { scoreHistoryRoutes } from './modules/score-history/score-history-routes';
 
 export const app = fastify();
 
@@ -20,3 +21,4 @@ app.register(fidelityProgramRoutes, { prefix: 'fidelity_program' });
 app.register(rewardRoutes, { prefix: 'reward' });
 app.register(participantRoutes, { prefix: 'participant' });
 app.register(scoreRoutes, { prefix: 'score' });
+app.register(scoreHistoryRoutes, { prefix: 'score_history' });
