@@ -12,7 +12,11 @@ type RegisterScoreInput = {
 
 type RegisterScoreOutput = {
   error: unknown | null;
-  code: 'FIDELITY_PROGRAM_NOT_FOUND' | 'REGISTERED' | 'UNEXPECTED_ERROR';
+  code:
+    | 'FIDELITY_PROGRAM_NOT_FOUND'
+    | 'REGISTERED'
+    | 'INSUFFICIENT_SCORE'
+    | 'UNEXPECTED_ERROR';
 };
 
 export const registerScore = async ({
@@ -21,6 +25,13 @@ export const registerScore = async ({
   score,
 }: RegisterScoreInput): Promise<RegisterScoreOutput> => {
   try {
+    if (score <= 0) {
+      return {
+        error: null,
+        code: 'INSUFFICIENT_SCORE',
+      };
+    }
+
     const fidelityProgram = await prisma.fidelityProgram.findUnique({
       where: {
         id: fidelityProgramId,

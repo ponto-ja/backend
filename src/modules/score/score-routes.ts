@@ -26,6 +26,10 @@ export const scoreRoutes = async (app: FastifyInstance) => {
         return reply.status(201).send({ code });
       }
 
+      case 'INSUFFICIENT_SCORE': {
+        return reply.status(400).send({ code });
+      }
+
       case 'FIDELITY_PROGRAM_NOT_FOUND': {
         return reply.status(404).send({ code });
       }
